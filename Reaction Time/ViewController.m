@@ -42,8 +42,8 @@
 
 - (IBAction)start:(id)sender {
     if (!inTrial) {
+        [hitMeButton setTitle:@"Watch for GREEN" forState:UIControlStateNormal];
         hitMeButton.enabled = NO;
-        [hitMeButton setTitle:@"Watch for GREEN" forState:UIControlEventAllEvents];
         double time = arc4random_uniform(3)+1;
         waitTime = &time;
         [self startTiming];
@@ -53,7 +53,7 @@
         NSTimeInterval interval = [start timeIntervalSinceNow];
         [self endTimingAnddisplayTime:interval];
         inTrial = NO;
-        [hitMeButton setTitle:@"HIT ME" forState:UIControlEventAllEvents];
+        [hitMeButton setTitle:@"HIT ME" forState:UIControlStateNormal];
     }
 
 }
