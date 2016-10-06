@@ -15,6 +15,7 @@
 @property BOOL inTrial;
 @property int numTrial;
 @property double totalTime;
+@property NSTimer* timeout;
 @end
 
 @implementation ViewController
@@ -42,18 +43,28 @@
 
 - (IBAction)start:(id)sender {
     if (!inTrial) {
-        [hitMeButton setTitle:@"Watch for GREEN" forState:UIControlStateNormal];
-        hitMeButton.enabled = NO;
-        double time = arc4random_uniform(3)+1;
-        waitTime = &time;
-        [self startTiming];
-        inTrial = YES;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [hitMeButton setTitle:@"GREEN" forState:UIControlStateNormal];
+            [hitMeButton setTitle:@"GREEN" forState:UIControlStateDisabled];
+            hitMeButton.enabled = NO;
+        });
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // Do your further processing - AFTER the ui has been updated
+            double time = arc4random_uniform(3)+1;
+            waitTime = &time;
+            [self startTiming];
+            inTrial = YES;
+        });
     }
     else {
         NSTimeInterval interval = [start timeIntervalSinceNow];
         [self endTimingAnddisplayTime:interval];
         inTrial = NO;
         [hitMeButton setTitle:@"HIT ME" forState:UIControlStateNormal];
+        [hitMeButton setTitle:@"HIT ME" forState:UIControlStateDisabled];
+        [hitMeButton setTitle:@"HIT ME" forState:UIControlStateSelected];
     }
 
 }
