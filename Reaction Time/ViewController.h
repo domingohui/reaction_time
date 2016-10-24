@@ -12,6 +12,8 @@
 - (IBAction)clear:(id)sender;
 - (IBAction)start:(id)sender;
 @property (strong, nonatomic) IBOutlet UIButton *hitMeButton;
+@property (strong, nonatomic) IBOutlet UIButton *clearButton;
+@property (strong, nonatomic) IBOutlet UIButton *fallBackButton;
 @property (weak, nonatomic) IBOutlet UILabel *time1;
 @property (weak, nonatomic) IBOutlet UILabel *time2;
 @property (weak, nonatomic) IBOutlet UILabel *time3;

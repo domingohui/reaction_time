@@ -11,7 +11,6 @@
 @interface ViewController ()
 @property NSArray *labels;
 @property NSDate *start;
-@property NSTimeInterval *waitTime;
 @property BOOL inTrial;
 @property int numTrial;
 @property double totalTime;
@@ -19,7 +18,8 @@
 @end
 
 @implementation ViewController
-@synthesize start, time1, time2, time3, time4, time5, averageTime, labels, waitTime, light, inTrial, numTrial, totalTime, hitMeButton;
+@synthesize start, time1, time2, time3, time4, time5, averageTime, labels,
+light, inTrial, numTrial, totalTime, hitMeButton, clearButton, fallBackButton;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -43,37 +43,48 @@
 
 - (IBAction)start:(id)sender {
     if (!inTrial) {
+        [self changeHitMeButtonStatus:NO];
+        clearButton.enabled = NO;
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [hitMeButton setTitle:@"GREEN" forState:UIControlStateNormal];
-            [hitMeButton setTitle:@"GREEN" forState:UIControlStateDisabled];
-            hitMeButton.enabled = NO;
-        });
+        [self showGreenSignalAfterRandomTime];
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            // Do your further processing - AFTER the ui has been updated
-            double time = arc4random_uniform(3)+1;
-            waitTime = &time;
-            [self startTiming];
-            inTrial = YES;
-        });
+        inTrial = YES;
+    }
+    else if (inTrial && !hitMeButton.enabled) {
+        UIAlertView *cheatAlert = [[UIAlertView alloc]
+                                   initWithTitle:@"You jumped the gun!"
+                                   message:@"Please wait for the green"
+                                   delegate:NULL cancelButtonTitle: @"Restart"
+                                   otherButtonTitles: nil ];
+        [cheatAlert show];
+
+        [self clear: clearButton];
     }
     else {
         NSTimeInterval interval = [start timeIntervalSinceNow];
         [self endTimingAnddisplayTime:interval];
         inTrial = NO;
-        [hitMeButton setTitle:@"HIT ME" forState:UIControlStateNormal];
-        [hitMeButton setTitle:@"HIT ME" forState:UIControlStateDisabled];
-        [hitMeButton setTitle:@"HIT ME" forState:UIControlStateSelected];
+        [self changeHitMeButtonStatus:YES];
+        clearButton.enabled = YES;
     }
 
 }
 
+- (void) showGreenSignalAfterRandomTime {
+    [self performSelector: @selector(changeSignalToGreen) withObject:self
+               afterDelay: (2 + arc4random_uniform(10)/10)];
+}
+
+- (void) changeSignalToGreen {
+    if (inTrial) {
+        light.backgroundColor = [UIColor greenColor];
+        [self startTiming];
+    }
+}
+
 - (void) startTiming{
-    [NSThread sleepForTimeInterval:*(waitTime)];
-    light.backgroundColor = [UIColor greenColor];
-    hitMeButton.enabled = YES;
     start = [NSDate date];//start timing
+    hitMeButton.enabled = YES;
 }
 
 - (void) endTimingAnddisplayTime : (NSTimeInterval)interval {
@@ -87,14 +98,32 @@
         averageTime.text = [NSString stringWithFormat:@"Average time: %f", totalTime/5];
         hitMeButton.enabled = NO;
     }
+    
 }
 
 - (IBAction)clear:(id)sender {
     totalTime = 0.00;
     numTrial = 0;
+    inTrial = NO;
     for (UILabel* label in labels)
         label.text = @"";
-    hitMeButton.enabled = YES;
+    [self changeHitMeButtonStatus:YES];
+    clearButton.enabled = YES;
+}
+
+- (void) changeHitMeButtonStatus: (bool) enabled {
+    if (enabled) {
+        [hitMeButton setTitle:@"HIT ME" forState:UIControlStateNormal];
+        [hitMeButton setTitle:@"HIT ME" forState:UIControlStateDisabled];
+        [hitMeButton setTitle:@"HIT ME" forState:UIControlStateSelected];
+        hitMeButton.enabled = YES;
+    }
+    else {
+        hitMeButton.enabled = NO;
+        [hitMeButton setTitle:@"WATCH FOR GREEN" forState:UIControlStateNormal];
+        [hitMeButton setTitle:@"WATCH FOR GREEN" forState:UIControlStateDisabled];
+        [hitMeButton setTitle:@"WATCH FOR GREEN" forState:UIControlStateSelected];
+    }
 }
 
 @end

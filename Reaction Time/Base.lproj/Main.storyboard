@@ -94,11 +94,24 @@
                                     <action selector="clear:" destination="BYZ-38-t0r" eventType="touchUpInside" id="KkQ-7g-TN8"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aoJ-GY-wTb" userLabel="Fall Back button">
+                                <frame key="frameInset" minX="127" minY="330" width="140" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="42"/>
+                                <state key="normal">
+                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="start:" destination="BYZ-38-t0r" eventType="touchUpInside" id="e9s-Yh-vMX"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <connections>
                         <outlet property="averageTime" destination="9qs-uE-84A" id="aG3-Nj-f4q"/>
+                        <outlet property="clearButton" destination="UwW-17-gNg" id="5nr-9i-7AG"/>
+                        <outlet property="fallBackButton" destination="aoJ-GY-wTb" id="guG-bI-xbg"/>
                         <outlet property="hitMeButton" destination="WSQ-SK-MTJ" id="4dD-pm-Qkl"/>
                         <outlet property="light" destination="Ehm-iB-6r5" id="5fc-6F-Ijz"/>
                         <outlet property="time1" destination="BrQ-3h-1w8" id="ybM-aJ-zT9"/>
